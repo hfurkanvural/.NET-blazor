@@ -1,0 +1,30 @@
+@using blazor_app.Models
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Details</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var data in knowledgeBase)
+        {
+            <tr>
+                <td>@data.name</td>
+                <td>@data.details</td>
+                <td>@data.date</td>
+                @* <td><input type="button" value="Delete" @onclick="(async () => await OnClickCallback(data.id))" /></td> *@
+            </tr>
+        }
+    </tbody>
+</table
+
+@code{
+     [Parameter]
+     public Knowledge[] knowledgeBase {get; set;}
+     
+     @* [Parameter]
+    public EventCallback<EventArgs> OnClickCallback { get; set; } *@
+}
