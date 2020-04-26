@@ -1,0 +1,59 @@
+@inject HttpClient Http
+@inject IModalService Modal
+@using blazor_app.Models
+
+
+<div class="simple-form">
+
+    <div class="form-group">
+        <input @bind="@KnowledgeObj.id" type="hidden" class="form-control" id="id" />
+    </div>
+
+    <div class="form-group">
+        <label for="name">Name</label>
+        <input @bind="@KnowledgeObj.name" type="text" class="form-control" id="name" />
+    </div>
+    <div class="form-group">
+        <label for="name">Details</label>
+        <input @bind="@KnowledgeObj.details" type="text" class="form-control" id="details" />
+    </div>
+    <div class="form-group">
+        <label for="name">Date</label>
+        <input @bind="@KnowledgeObj.date" type="text" class="form-control" id="date" />
+    </div>
+
+    <button @onclick="SaveMovie" class="btn btn-primary">Submit</button>
+    <button @onclick="BlazoredModal.Cancel" class="btn btn-secondary">Cancel</button>
+</div>
+
+@code{
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
+
+    [Parameter] 
+    public Knowledge Obj { get; set; }
+    [Parameter]
+    public string APIUrl { get; set; }
+
+    Knowledge KnowledgeObj {get; set; }
+    string APIServer { get; set; }
+
+    private async Task SaveMovie()
+    {
+        var newKnowledge = new Knowledge { name = KnowledgeObj.name, details = KnowledgeObj.details, date=KnowledgeObj.date };
+        if (KnowledgeObj.id == 0)
+            await Http.PostJsonAsync(APIServer, newKnowledge);
+        else
+            await Http.PutJsonAsync(APIServer + "/" + KnowledgeObj.id, newKnowledge);
+
+        BlazoredModal.Close(ModalResult.Ok<Knowledge>(KnowledgeObj));
+    }
+    protected override void OnInitialized()
+    {
+        
+        KnowledgeObj = Obj;
+        APIServer = APIUrl;
+        Console.WriteLine("knowledgename: {0} inside ", KnowledgeObj.name);
+
+    }
+
+}
